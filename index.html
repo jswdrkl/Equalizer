@@ -1,367 +1,567 @@
 <!DOCTYPE html>
-<html lang="mr" class="light">
+<html lang="mr" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>आंतरिक सौंदर्य आणि इक्वलायझर</title>
-    
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"IBM Plex Sans Devanagari"', '"IBM Plex Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        themeBgLight: '#FAF7F2',
-                        themeCardLight: '#FFFFFF',
-                        themeBgDark: '#12151A',
-                        themeCardDark: '#1A1E24',
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>आंतरिक सौंदर्य आणि इक्वलायझर</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #fbf9f5;
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --card-border: rgba(226, 217, 201, 0.8);
+      --card-shadow: 0 18px 45px rgba(184, 160, 130, 0.14);
+      --text-main: #232220;
+      --text-quote: #3d3b38;
+      --text-meta: #6a645d;
+      --title-color: #1a1918;
+      --divider-color: #a36b3b;
+      --btn-bg: linear-gradient(135deg, #df7d4a, #c75c32);
+      --btn-hover: linear-gradient(135deg, #c75c32, #ad4a22);
+      --btn-text: #ffffff;
+      --toggle-bg: #ece6dc;
+      --toggle-border: #d5cbbe;
+      --toggle-icon: #4b453d;
+      --toast-bg: #2c2724;
+      --toast-text: #f7f5f0;
+      --accent-glow: rgba(247, 185, 107, 0.28);
+    }
 
-    <!-- Google Fonts: IBM Plex Sans & IBM Plex Sans Devanagari -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Devanagari:wght@300;400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+    [data-theme="dark"] {
+      --bg-page: #151618;
+      --bg-card: rgba(26, 28, 31, 0.9);
+      --card-border: rgba(62, 66, 73, 0.8);
+      --card-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
+      --text-main: #dfdeda;
+      --text-quote: #cfcdc8;
+      --text-meta: #9e9c96;
+      --title-color: #f5f4ef;
+      --divider-color: #e09355;
+      --btn-bg: linear-gradient(135deg, #e0824e, #c96537);
+      --btn-hover: linear-gradient(135deg, #f2905c, #d86f3f);
+      --btn-text: #ffffff;
+      --toggle-bg: #26282d;
+      --toggle-border: #42464f;
+      --toggle-icon: #f4be78;
+      --toast-bg: #f4ede1;
+      --toast-text: #1f1d1b;
+      --accent-glow: rgba(234, 142, 85, 0.2);
+    }
 
-    <style>
-        body {
-            font-family: 'IBM Plex Sans Devanagari', 'IBM Plex Sans', sans-serif;
-            word-break: normal;
-            overflow-wrap: break-word;
-            hyphens: none;
-            -webkit-font-smoothing: antialiased;
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .content-body {
-            text-align: justify;
-            text-justify: inter-word;
-            line-height: 2.4;
-            letter-spacing: 0.015em;
-        }
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-page);
+      font-family: "IBM Plex Sans Devanagari", "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px 48px;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      line-height: 1.85;
+      background-image: 
+        radial-gradient(circle at 12% 15%, var(--accent-glow) 0%, transparent 42%),
+        radial-gradient(circle at 88% 85%, var(--accent-glow) 0%, transparent 42%);
+      background-attachment: fixed;
+    }
 
-        /* SVG EQ Bar Keyframe Animations */
-        @keyframes eqBounce1 {
-            0%, 100% { height: 28px; }
-            50% { height: 82px; }
-        }
-        @keyframes eqBounce2 {
-            0%, 100% { height: 65px; }
-            50% { height: 24px; }
-        }
-        @keyframes eqBounce3 {
-            0%, 100% { height: 40px; }
-            50% { height: 95px; }
-        }
-        @keyframes eqBounce4 {
-            0%, 100% { height: 78px; }
-            50% { height: 35px; }
-        }
-        @keyframes eqBounce5 {
-            0%, 100% { height: 30px; }
-            50% { height: 88px; }
-        }
-        @keyframes eqBounce6 {
-            0%, 100% { height: 85px; }
-            50% { height: 20px; }
-        }
+    .container {
+      width: 100%;
+      max-width: 760px;
+      background: var(--bg-card);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 38px 38px 46px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    }
 
-        .eq-bar-1 { animation: eqBounce1 2.2s ease-in-out infinite; }
-        .eq-bar-2 { animation: eqBounce2 1.8s ease-in-out infinite 0.2s; }
-        .eq-bar-3 { animation: eqBounce3 2.5s ease-in-out infinite 0.4s; }
-        .eq-bar-4 { animation: eqBounce4 2.0s ease-in-out infinite 0.1s; }
-        .eq-bar-5 { animation: eqBounce5 2.3s ease-in-out infinite 0.3s; }
-        .eq-bar-6 { animation: eqBounce6 1.9s ease-in-out infinite 0.5s; }
+    .header-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
 
-        @keyframes waveShift {
-            0% { stroke-dashoffset: 0; }
-            100% { stroke-dashoffset: 400; }
-        }
-        .animated-wave {
-            stroke-dasharray: 20 8;
-            animation: waveShift 14s linear infinite;
-        }
+    .theme-toggle-btn {
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      color: var(--toggle-icon);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, background-color 0.25s ease;
+    }
 
-        @keyframes pulseGlow {
-            0%, 100% { transform: scale(1); opacity: 0.85; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-        .pulse-core {
-            transform-origin: center;
-            animation: pulseGlow 4s ease-in-out infinite;
-        }
-    </style>
+    .theme-toggle-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .theme-toggle-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .theme-toggle-btn .sun-icon {
+      display: none;
+    }
+
+    [data-theme="dark"] .theme-toggle-btn .moon-icon {
+      display: none;
+    }
+
+    [data-theme="dark"] .theme-toggle-btn .sun-icon {
+      display: block;
+    }
+
+    .hero-graphic {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 12px 0 28px;
+    }
+
+    .hero-svg {
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      overflow: visible;
+    }
+
+    .doc-title {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--title-color);
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+      margin-bottom: 26px;
+      word-break: keep-all;
+    }
+
+    .content-body {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Slightly increased font size for main body text */
+    .body-para {
+      font-size: 1.22rem;
+      line-height: 1.9;
+      text-align: justify;
+      color: var(--text-main);
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      text-justify: inter-word;
+    }
+
+    .symbol-divider {
+      text-align: center;
+      color: var(--divider-color);
+      font-size: 1.25rem;
+      letter-spacing: 0.55rem;
+      user-select: none;
+      margin: 8px 0;
+    }
+
+    /* Decreased font size for the quoted line, centered with italic styling */
+    .quote-text {
+      text-align: center;
+      font-size: 1.02rem;
+      line-height: 1.8;
+      font-style: italic;
+      color: var(--text-quote);
+      font-weight: 500;
+      padding: 0 10px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    /* Decreased font size for date and festival markings, centered */
+    .meta-line {
+      text-align: center;
+      color: var(--text-meta);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    .meta-line.meta-date {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      opacity: 0.9;
+    }
+
+    .share-section {
+      margin-top: 36px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .share-btn {
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      padding: 13px 32px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      font-weight: 600;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 22px rgba(223, 125, 74, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .share-btn:hover {
+      background: var(--btn-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 11px 26px rgba(223, 125, 74, 0.45);
+    }
+
+    .share-btn:active {
+      transform: translateY(0);
+    }
+
+    .share-btn svg {
+      width: 19px;
+      height: 19px;
+      fill: currentColor;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(90px);
+      background: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 10px 22px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px 10px 36px;
+      }
+
+      .container {
+        padding: 26px 18px 34px;
+        border-radius: 18px;
+      }
+
+      .doc-title {
+        font-size: 1.62rem;
+        margin-bottom: 20px;
+      }
+
+      .body-para {
+        font-size: 1.15rem;
+        line-height: 1.84;
+        text-align: justify;
+      }
+
+      .quote-text {
+        font-size: 0.98rem;
+      }
+
+      .meta-line {
+        font-size: 0.88rem;
+      }
+
+      .meta-line.meta-date {
+        font-size: 0.82rem;
+      }
+
+      .share-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 20px;
+      }
+    }
+  </style>
 </head>
-<body class="bg-themeBgLight text-stone-800 dark:bg-themeBgDark dark:text-stone-200 min-h-screen selection:bg-amber-200 dark:selection:bg-amber-900/40">
+<body>
 
-    <header class="w-full max-w-3xl mx-auto px-5 pt-6 pb-2 flex justify-end items-center">
-        <button id="themeToggleBtn" type="button" aria-label="Toggle theme" class="p-2.5 rounded-full border border-stone-300 dark:border-stone-700 bg-white/80 dark:bg-stone-800/80 shadow-sm hover:scale-105 active:scale-95 transition-all text-stone-700 dark:text-stone-300">
-            <!-- Sun icon for dark mode -->
-            <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="5" stroke-width="2"></circle>
-                <path stroke-linecap="round" stroke-width="2" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-            </svg>
-            <!-- Moon icon for light mode -->
-            <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-            </svg>
-        </button>
-    </header>
+  <main class="container">
+    <div class="header-bar">
+      <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+        <!-- Moon Icon -->
+        <svg class="moon-icon" viewBox="0 0 24 24">
+          <path d="M12.3 2a10 10 0 0 0 9.7 12.8 10 10 0 1 1-12.5-12.5 1 1 0 0 1 2.8-.3z"/>
+        </svg>
+        <!-- Sun Icon -->
+        <svg class="sun-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
 
-    <main class="w-full max-w-3xl mx-auto px-5 sm:px-8 pb-12 pt-2">
-        <article class="bg-themeCardLight dark:bg-themeCardDark rounded-3xl shadow-sm border border-stone-200/70 dark:border-stone-800/80 p-6 sm:p-10 md:p-12 transition-colors duration-400">
-            
-            <!-- Document Title -->
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center tracking-normal text-stone-900 dark:text-stone-100 mb-8 leading-snug">
-                आंतरिक सौंदर्य आणि इक्वलायझर
-            </h1>
+    <!-- Animated Light Colorful SVG Graphic -->
+    <div class="hero-graphic">
+      <svg class="hero-svg" viewBox="0 0 460 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#ff7e5f"/>
+            <stop offset="100%" stop-color="#feb47b"/>
+          </linearGradient>
+          <linearGradient id="grad2" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#f39c12"/>
+            <stop offset="100%" stop-color="#f1c40f"/>
+          </linearGradient>
+          <linearGradient id="grad3" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#2ecc71"/>
+            <stop offset="100%" stop-color="#a8e063"/>
+          </linearGradient>
+          <linearGradient id="grad4" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#1abc9c"/>
+            <stop offset="100%" stop-color="#48dbfb"/>
+          </linearGradient>
+          <linearGradient id="grad5" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#3498db"/>
+            <stop offset="100%" stop-color="#9b59b6"/>
+          </linearGradient>
+          <linearGradient id="grad6" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#9b59b6"/>
+            <stop offset="100%" stop-color="#ff6b81"/>
+          </linearGradient>
+          <radialGradient id="auraGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fbc531" stop-opacity="0.38"/>
+            <stop offset="100%" stop-color="#fbc531" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
 
-            <!-- Light colorful animated SVG graphic -->
-            <div class="w-full max-w-lg mx-auto my-6 p-4 rounded-2xl bg-amber-50/40 dark:bg-stone-900/60 border border-amber-100 dark:border-stone-800 flex justify-center items-center">
-                <svg viewBox="0 0 500 210" class="w-full h-auto select-none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="eqGrad1" x1="0%" y1="100%" x2="0%" y2="0%">
-                            <stop offset="0%" stop-color="#38bdf8" />
-                            <stop offset="100%" stop-color="#818cf8" />
-                        </linearGradient>
-                        <linearGradient id="eqGrad2" x1="0%" y1="100%" x2="0%" y2="0%">
-                            <stop offset="0%" stop-color="#fb7185" />
-                            <stop offset="100%" stop-color="#f472b6" />
-                        </linearGradient>
-                        <linearGradient id="eqGrad3" x1="0%" y1="100%" x2="0%" y2="0%">
-                            <stop offset="0%" stop-color="#fbbf24" />
-                            <stop offset="100%" stop-color="#f97316" />
-                        </linearGradient>
-                        <linearGradient id="eqGrad4" x1="0%" y1="100%" x2="0%" y2="0%">
-                            <stop offset="0%" stop-color="#34d399" />
-                            <stop offset="100%" stop-color="#10b981" />
-                        </linearGradient>
-                        <linearGradient id="eqGrad5" x1="0%" y1="100%" x2="0%" y2="0%">
-                            <stop offset="0%" stop-color="#a78bfa" />
-                            <stop offset="100%" stop-color="#c084fc" />
-                        </linearGradient>
-                        <linearGradient id="eqGrad6" x1="0%" y1="100%" x2="0%" y2="0%">
-                            <stop offset="0%" stop-color="#38bdf8" />
-                            <stop offset="100%" stop-color="#2dd4bf" />
-                        </linearGradient>
-                        <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#fb7185" stop-opacity="0.6"/>
-                            <stop offset="50%" stop-color="#818cf8" stop-opacity="0.7"/>
-                            <stop offset="100%" stop-color="#34d399" stop-opacity="0.6"/>
-                        </linearGradient>
-                    </defs>
+        <style>
+          @keyframes waveFlow {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-35px); }
+            100% { transform: translateX(0); }
+          }
+          @keyframes pulseScale {
+            0%, 100% { transform: scaleY(0.4) scaleX(1); }
+            50% { transform: scaleY(0.98) scaleX(1.02); }
+          }
+          @keyframes faderMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-38px); }
+          }
+          .sound-aura {
+            animation: pulseScale 3.5s ease-in-out infinite;
+            transform-origin: 230px 85px;
+          }
+          .wave-anim {
+            animation: waveFlow 4.5s ease-in-out infinite;
+          }
+          .eq-col-1 { animation: pulseScale 1.8s ease-in-out infinite alternate; transform-origin: center bottom; }
+          .eq-col-2 { animation: pulseScale 2.3s ease-in-out infinite alternate 0.3s; transform-origin: center bottom; }
+          .eq-col-3 { animation: pulseScale 1.6s ease-in-out infinite alternate 0.5s; transform-origin: center bottom; }
+          .eq-col-4 { animation: pulseScale 2.1s ease-in-out infinite alternate 0.2s; transform-origin: center bottom; }
+          .eq-col-5 { animation: pulseScale 1.9s ease-in-out infinite alternate 0.6s; transform-origin: center bottom; }
+          .eq-col-6 { animation: pulseScale 2.4s ease-in-out infinite alternate 0.4s; transform-origin: center bottom; }
 
-                    <!-- Background harmonic wave lines -->
-                    <path class="animated-wave" d="M 10 100 Q 75 40 140 100 T 270 100 T 400 100 T 490 100" fill="none" stroke="url(#waveGrad)" stroke-width="2.5" opacity="0.7"/>
-                    <path class="animated-wave" d="M 10 115 Q 85 160 160 115 T 310 115 T 490 115" fill="none" stroke="url(#waveGrad)" stroke-width="2" opacity="0.4" style="animation-direction: reverse; animation-duration: 18s;"/>
+          .fader-1 { animation: faderMove 1.8s ease-in-out infinite alternate; }
+          .fader-2 { animation: faderMove 2.3s ease-in-out infinite alternate 0.3s; }
+          .fader-3 { animation: faderMove 1.6s ease-in-out infinite alternate 0.5s; }
+          .fader-4 { animation: faderMove 2.1s ease-in-out infinite alternate 0.2s; }
+          .fader-5 { animation: faderMove 1.9s ease-in-out infinite alternate 0.6s; }
+          .fader-6 { animation: faderMove 2.4s ease-in-out infinite alternate 0.4s; }
+        </style>
 
-                    <!-- Central Inner Heart / Resonance Halo -->
-                    <g class="pulse-core">
-                        <circle cx="250" cy="100" r="56" fill="#fde68a" fill-opacity="0.18" stroke="#f59e0b" stroke-opacity="0.3" stroke-width="1.5"/>
-                        <circle cx="250" cy="100" r="38" fill="#fda4af" fill-opacity="0.15" stroke="#f43f5e" stroke-opacity="0.3" stroke-width="1.2"/>
-                    </g>
+        <!-- Ambient Aura -->
+        <ellipse cx="230" cy="85" rx="190" ry="60" fill="url(#auraGlow)" class="sound-aura" />
 
-                    <!-- Six Equalizer Channels -->
-                    <line x1="85" y1="35" x2="85" y2="165" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
-                    <rect class="eq-bar-1" x="78" y="70" width="14" height="60" rx="7" fill="url(#eqGrad1)"/>
-                    <circle cx="85" cy="100" r="3" fill="#ffffff"/>
+        <!-- Sine Wave Soundlines -->
+        <g opacity="0.45" class="wave-anim">
+          <path d="M-30 85 Q 40 45, 110 85 T 250 85 T 390 85 T 510 85" fill="none" stroke="#f39c12" stroke-width="2" stroke-dasharray="4 4"/>
+          <path d="M-30 85 Q 40 120, 110 85 T 250 85 T 390 85 T 510 85" fill="none" stroke="#2ecc71" stroke-width="2" stroke-dasharray="3 3"/>
+        </g>
 
-                    <line x1="150" y1="35" x2="150" y2="165" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
-                    <rect class="eq-bar-2" x="143" y="65" width="14" height="68" rx="7" fill="url(#eqGrad2)"/>
-                    <circle cx="150" cy="98" r="3" fill="#ffffff"/>
+        <!-- 6 Equalizer Sliders / Pack -->
+        <!-- Track 1 -->
+        <rect x="70" y="32" width="6" height="106" rx="3" fill="#cfc8bd" opacity="0.45"/>
+        <g class="eq-col-1"><rect x="68" y="58" width="10" height="80" rx="5" fill="url(#grad1)"/></g>
+        <g class="fader-1"><circle cx="73" cy="98" r="9" fill="#ffffff" stroke="#ff7e5f" stroke-width="3"/></g>
 
-                    <line x1="215" y1="35" x2="215" y2="165" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
-                    <rect class="eq-bar-3" x="208" y="55" width="14" height="85" rx="7" fill="url(#eqGrad3)"/>
-                    <circle cx="215" cy="96" r="3" fill="#ffffff"/>
+        <!-- Track 2 -->
+        <rect x="134" y="32" width="6" height="106" rx="3" fill="#cfc8bd" opacity="0.45"/>
+        <g class="eq-col-2"><rect x="132" y="44" width="10" height="94" rx="5" fill="url(#grad2)"/></g>
+        <g class="fader-2"><circle cx="137" cy="86" r="9" fill="#ffffff" stroke="#f39c12" stroke-width="3"/></g>
 
-                    <line x1="285" y1="35" x2="285" y2="165" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
-                    <rect class="eq-bar-4" x="278" y="60" width="14" height="75" rx="7" fill="url(#eqGrad4)"/>
-                    <circle cx="285" cy="97" r="3" fill="#ffffff"/>
+        <!-- Track 3 -->
+        <rect x="198" y="32" width="6" height="106" rx="3" fill="#cfc8bd" opacity="0.45"/>
+        <g class="eq-col-3"><rect x="196" y="70" width="10" height="68" rx="5" fill="url(#grad3)"/></g>
+        <g class="fader-3"><circle cx="201" cy="110" r="9" fill="#ffffff" stroke="#2ecc71" stroke-width="3"/></g>
 
-                    <line x1="350" y1="35" x2="350" y2="165" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
-                    <rect class="eq-bar-5" x="343" y="70" width="14" height="62" rx="7" fill="url(#eqGrad5)"/>
-                    <circle cx="350" cy="101" r="3" fill="#ffffff"/>
+        <!-- Track 4 -->
+        <rect x="262" y="32" width="6" height="106" rx="3" fill="#cfc8bd" opacity="0.45"/>
+        <g class="eq-col-4"><rect x="260" y="50" width="10" height="88" rx="5" fill="url(#grad4)"/></g>
+        <g class="fader-4"><circle cx="265" cy="90" r="9" fill="#ffffff" stroke="#1abc9c" stroke-width="3"/></g>
 
-                    <line x1="415" y1="35" x2="415" y2="165" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
-                    <rect class="eq-bar-6" x="408" y="50" width="14" height="90" rx="7" fill="url(#eqGrad6)"/>
-                    <circle cx="415" cy="95" r="3" fill="#ffffff"/>
+        <!-- Track 5 -->
+        <rect x="326" y="32" width="6" height="106" rx="3" fill="#cfc8bd" opacity="0.45"/>
+        <g class="eq-col-5"><rect x="324" y="62" width="10" height="76" rx="5" fill="url(#grad5)"/></g>
+        <g class="fader-5"><circle cx="329" cy="102" r="9" fill="#ffffff" stroke="#3498db" stroke-width="3"/></g>
 
-                    <!-- Slider Fader Knobs Details -->
-                    <line x1="75" y1="182" x2="425" y2="182" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.5"/>
-                    <circle cx="85" cy="182" r="3.5" fill="#818cf8"/>
-                    <circle cx="150" cy="182" r="3.5" fill="#f472b6"/>
-                    <circle cx="215" cy="182" r="3.5" fill="#f97316"/>
-                    <circle cx="285" cy="182" r="3.5" fill="#10b981"/>
-                    <circle cx="350" cy="182" r="3.5" fill="#a855f7"/>
-                    <circle cx="415" cy="182" r="3.5" fill="#06b6d4"/>
-                </svg>
-            </div>
+        <!-- Track 6 -->
+        <rect x="390" y="32" width="6" height="106" rx="3" fill="#cfc8bd" opacity="0.45"/>
+        <g class="eq-col-6"><rect x="388" y="40" width="10" height="98" rx="5" fill="url(#grad6)"/></g>
+        <g class="fader-6"><circle cx="393" cy="80" r="9" fill="#ffffff" stroke="#9b59b6" stroke-width="3"/></g>
+      </svg>
+    </div>
 
-            <div class="content-body space-y-8 text-lg sm:text-xl text-stone-800 dark:text-stone-200 mt-8 font-normal">
-                <p>
-                    दोन-पांच मिनिटांचे गाणे, तासभराची मैफल, ऑपेरा किंवा सिम्फनी ऑर्केस्ट्रा यातील कोणतीही संगीत रचना म्हणजे गायकाचा स्वर आणि साथ-वाद्यांची सुरावट यांचा उत्कृष्ट मिलाफ असतो. सिम्फनी ऑर्केस्ट्रामधे गायकाचा स्वर नसला तरी काही मुख्य वाद्ये आणि इतर साथवाद्ये असतात. प्रत्येक ‘संगीत रचने’ला स्वतःचे एक आंतरिक सौंदर्य म्हणजेच नादमाधुर्य असते.
-                </p>
+    <!-- Document Title -->
+    <h1 class="doc-title">आंतरिक सौंदर्य आणि इक्वलायझर</h1>
 
-                <p>
-                    असे सूर-माधुर्याने नटलेले प्रत्येक तानसेनी गाणे कान टवकारून श्रवण करण्यासाठी जमलेल्या शेवटच्या रांगेतील कानसेनी रासिकांपर्यंत पोहोचवायला मदत घ्यावी लागते ती audio amplifier आणि speakers ची.
-                </p>
+    <!-- Document Content -->
+    <article class="content-body">
+      <p class="body-para">दोन-पांच मिनिटांचे गाणे, तासभराची मैफल, ऑपेरा किंवा सिम्फनी ऑर्केस्ट्रा यातील कोणतीही संगीत रचना म्हणजे गायकाचा स्वर आणि साथ-वाद्यांची सुरावट यांचा उत्कृष्ट मिलाफ असतो. सिम्फनी ऑर्केस्ट्रामधे गायकाचा स्वर नसला तरी काही मुख्य वाद्ये आणि इतर साथवाद्ये असतात. प्रत्येक ‘संगीत रचने’ला स्वतःचे एक आंतरिक सौंदर्य म्हणजेच नादमाधुर्य असते.</p>
 
-                <p>
-                    कोणताही audio amplifier मूळ आवाज मोठा करून speakers मधून वाजवतो. परंतु वाजवल्या जाणाऱ्या संगीत रचनेचे षड्ज-पंचम शक्य तितक्या मूळ स्वरूपात रसिकांच्या कानांवर पडावे यासाठी कोणत्याही चांगल्या audio amplifier मधे bass, treble आणि tone यांचा ‘ताल’ साधण्यासाठी ऑडिओ इक्वलायझरची सोय केलेली असते. त्याच्या सहाय्याने आवाजाच्या फेकीच्या चढ-उतारात सुयोग्य बदल करून स्पीकरमधून बाहेर पडणाऱ्या आवाजाचा ‘नाद’ राखता येतो.
-                </p>
-            </div>
+      <p class="body-para">असे सूर-माधुर्याने नटलेले प्रत्येक तानसेनी गाणे कान टवकारून श्रवण करण्यासाठी जमलेल्या शेवटच्या रांगेतील कानसेनी रासिकांपर्यंत पोहोचवायला मदत घ्यावी लागते ती audio amplifier आणि speakers ची.</p>
 
-            <!-- Section 1 Divider -->
-            <div class="my-10 text-center text-amber-700/80 dark:text-amber-400/80 tracking-widest text-lg font-mono select-none" aria-hidden="true">
-                ⚛⚛⚛
-            </div>
+      <p class="body-para">कोणताही audio amplifier मूळ आवाज मोठा करून speakers मधून वाजवतो. परंतु वाजवल्या जाणाऱ्या संगीत रचनेचे षड्ज-पंचम शक्य तितक्या मूळ स्वरूपात रसिकांच्या कानांवर पडावे यासाठी कोणत्याही चांगल्या audio amplifier मधे bass, treble आणि tone यांचा ‘ताल’ साधण्यासाठी ऑडिओ इक्वलायझरची सोय केलेली असते. त्याच्या सहाय्याने आवाजाच्या फेकीच्या चढ-उतारात सुयोग्य बदल करून स्पीकरमधून बाहेर पडणाऱ्या आवाजाचा ‘नाद’ राखता येतो.</p>
 
-            <div class="content-body space-y-8 text-lg sm:text-xl text-stone-800 dark:text-stone-200 font-normal">
-                <p>
-                    आपल्यातल्या प्रत्येकाला विधात्याकडून बाह्य सौंदर्याबरोबरच खास स्वभावविशेषांनी नटलेले आंतरिक स्वभाव-माधुर्य देखील मिळाले आहे. या ज्याच्या त्याच्या स्वभावविशेषयुक्त अंतरंगातले वेगवेगळे स्वर आणि ताल विविध तारा छेडत वैशिष्ट्यपूर्ण वागण्या-बोलण्यातून amplify होऊन बाहेर येत असतात. त्यावर नियंत्रण ठेवता येते ते काम, क्रोध, मद, मत्सर, लोभ आणि मोह ही सहा सेटिंग्ज कमी जास्त करून. आणि हो, हा अदृष्य ‘सिक्स-पॅक सेटिंग इक्वलायझर’ आपला आपणच वापरायचा असतो. दुसऱ्या कोणास तो हाताळता येउच शकत नाही.
-                </p>
+      <div class="symbol-divider">⚛⚛⚛</div>
 
-                <p>
-                    कोणताही ‘म्यूझीकल पीस’ स्पीकरमधून बाहेर पडतानाचे त्याचे रुपडे जसे ऑडिओ इक्वलायझरच्या सेटिंग्जवर अवलंबून असते त्याचप्रमाणे आपल्या प्रत्येकाच्या ‘स्वभाव-संगीत-रचने’चे कुटुंबात आणि समाजात तालसुरात वाजणे हे आपण आपले भावनांचे ‘सिक्स-पॅक ईक्यू कंट्रोल्स’ कसे हाताळतो त्यावर ठरते असे म्हणणे अतिशयोक्त ठरणार नाही. एकदा का हे ‘ट्यूनिंग’ जमले की फक्त गुणगुणणेच नव्हे तर बोलणेही सुरेल होते.
-                </p>
+      <p class="body-para">आपल्यातल्या प्रत्येकाला विधात्याकडून बाह्य सौंदर्याबरोबरच खास स्वभावविशेषांनी नटलेले आंतरिक स्वभाव-माधुर्य देखील मिळाले आहे. या ज्याच्या त्याच्या स्वभावविशेषयुक्त अंतरंगातले वेगवेगळे स्वर आणि ताल विविध तारा छेडत वैशिष्ट्यपूर्ण वागण्या-बोलण्यातून amplify होऊन बाहेर येत असतात. त्यावर नियंत्रण ठेवता येते ते काम, क्रोध, मद, मत्सर, लोभ आणि मोह ही सहा सेटिंग्ज कमी जास्त करून. आणि हो, हा अदृष्य ‘सिक्स-पॅक सेटिंग इक्वलायझर’ आपला आपणच वापरायचा असतो. दुसऱ्या कोणास तो हाताळता येउच शकत नाही.</p>
 
-                <p>
-                    डीजे वापरुन स्पीकर्सच्या महाकाय भिंती उभ्या केल्या तर ताल-स्वरातील गाणे बेसुऱ्या तार-सप्तकात वाजवून कानठळ्या बसवणारा धिंगाणा घालता येतो; पण त्याच गाण्यातील स्वर-तालाच्या नादमाधुर्याने रसिकांच्या मनात कायमस्वरूपी घर करायचे असेल तर ऑडिओ इक्वलायझरची परफेक्ट सेटिंग्ज आणि साधे हेडफोन्स देखील पुरेसे असतात.
-                </p>
+      <p class="body-para">कोणताही ‘म्यूझीकल पीस’ स्पीकरमधून बाहेर पडतानाचे त्याचे रुपडे जसे ऑडिओ इक्वलायझरच्या सेटिंग्जवर अवलंबून असते त्याचप्रमाणे आपल्या प्रत्येकाच्या ‘स्वभाव-संगीत-रचने’चे कुटुंबात आणि समाजात तालसुरात वाजणे हे आपण आपले भावनांचे ‘सिक्स-पॅक ईक्यू कंट्रोल्स’ कसे हाताळतो त्यावर ठरते असे म्हणणे अतिशयोक्त ठरणार नाही. एकदा का हे ‘ट्यूनिंग’ जमले की फक्त गुणगुणणेच नव्हे तर बोलणेही सुरेल होते.</p>
 
-                <p>
-                    तद्वत, आंतरिक सौंदर्याने स्वतःचा आब राखत असतानाच कुटुंबीय, आप्तस्वकीय आणि समाज यांच्या मनात आपल्या मधुर स्वभाव-सिम्फनीची कृतज्ञ धून ‘जिंदगी के साथ भी और बाद भी’ छेडली जात राहिली पाहिजे असे वाटत असेल तर आयुष्याची मैफल सुरू असतानाच काम, क्रोध, मद, मत्सर, लोभ आणि मोह या आपल्याच सुरावटींच्या ‘सिक्स-पॅक ईक्यू’चे फाइन ट्यूनिंग जितक्या लवकर आत्मसात करता येईल तितके उत्तम!
-                </p>
-            </div>
+      <p class="body-para">डीजे वापरुन स्पीकर्सच्या महाकाय भिंती उभ्या केल्या तर ताल-स्वरातील गाणे बेसुऱ्या तार-सप्तकात वाजवून कानठळ्या बसवणारा धिंगाणा घालता येतो; पण त्याच गाण्यातील स्वर-तालाच्या नादमाधुर्याने रसिकांच्या मनात कायमस्वरूपी घर करायचे असेल तर ऑडिओ इक्वलायझरची परफेक्ट सेटिंग्ज आणि साधे हेडफोन्स देखील पुरेसे असतात.</p>
 
-            <!-- Section 2 Divider -->
-            <div class="my-10 text-center text-amber-700/80 dark:text-amber-400/80 tracking-widest text-lg font-mono select-none" aria-hidden="true">
-                ⚛⚛⚛
-            </div>
+      <p class="body-para">तद्वत, आंतरिक सौंदर्याने स्वतःचा आब राखत असतानाच कुटुंबीय, आप्तस्वकीय आणि समाज यांच्या मनात आपल्या मधुर स्वभाव-सिम्फनीची कृतज्ञ धून ‘जिंदगी के साथ भी और बाद भी’ छेडली जात राहिली पाहिजे असे वाटत असेल तर आयुष्याची मैफल सुरू असतानाच काम, क्रोध, मद, मत्सर, लोभ आणि मोह या आपल्याच सुरावटींच्या ‘सिक्स-पॅक ईक्यू’चे फाइन ट्यूनिंग जितक्या लवकर आत्मसात करता येईल तितके उत्तम!</p>
 
-            <!-- Centered & Italics quote -->
-            <div class="text-center italic text-base sm:text-xl font-medium text-amber-900 dark:text-amber-200 px-4 py-3 leading-loose">
-                भावनाओंका सिक्स-पॅक ईक्यू ‘सुर में’ लगाओ, ताल से ताल मिलाओ; ताल-सुरोंकी ‘अनुभूती’ आजमाओ!!
-            </div>
+      <div class="symbol-divider">⚛⚛⚛</div>
 
-            <!-- Divider -->
-            <div class="my-10 text-center text-amber-700/80 dark:text-amber-400/80 tracking-widest text-lg font-mono select-none" aria-hidden="true">
-                ⚛⚛⚛
-            </div>
+      <!-- Quote with decreased font size and centered formatting -->
+      <p class="quote-text">भावनाओंका सिक्स-पॅक ईक्यू ‘सुर में’ लगाओ, ताल से ताल मिलाओ; ताल-सुरोंकी ‘अनुभूती’ आजमाओ!!</p>
 
-            <!-- Concluding date & occasion -->
-            <div class="text-center text-sm sm:text-base text-stone-600 dark:text-stone-400 space-y-2 leading-relaxed">
-                <p>हुताशनी पौर्णिमा</p>
-                <p>२०२५०३१३</p>
-            </div>
+      <div class="symbol-divider">⚛⚛⚛</div>
 
-            <!-- Final Divider -->
-            <div class="my-10 text-center text-amber-700/80 dark:text-amber-400/80 tracking-widest text-lg font-mono select-none" aria-hidden="true">
-                ⚛⚛⚛
-            </div>
+      <!-- Date and occasion lines with decreased font size and centered formatting -->
+      <p class="meta-line">हुताशनी पौर्णिमा</p>
+      <p class="meta-line meta-date">२०२५०३१३</p>
 
-            <!-- Share button at the very bottom -->
-            <div class="mt-8 pt-4 flex flex-col items-center justify-center">
-                <button id="shareBtn" type="button" class="inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-base font-medium text-white bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 active:scale-95 shadow-md shadow-amber-600/20 transition-all duration-200">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
-                    </svg>
-                    <span>शेअर करा</span>
-                </button>
+      <div class="symbol-divider">⚛⚛⚛</div>
+    </article>
 
-                <!-- Toast feedback element -->
-                <div id="shareToast" class="opacity-0 pointer-events-none transition-opacity duration-300 mt-3 text-xs sm:text-sm text-stone-600 dark:text-stone-400 bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 px-4 py-2 rounded-full">
-                    लिंक कॉपी झाली आहे!
-                </div>
-            </div>
+    <!-- Share button at bottom -->
+    <div class="share-section">
+      <button class="share-btn" id="shareBtn" aria-label="Share page">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+        </svg>
+        <span>शेअर करा</span>
+      </button>
+    </div>
+  </main>
 
-        </article>
-    </main>
+  <div class="toast" id="toast">लिंक कॉपी केली गेली आहे!</div>
 
-    <script>
-        (function() {
-            // Theme toggle logic
-            const root = document.documentElement;
-            const toggleBtn = document.getElementById('themeToggleBtn');
+  <script>
+    // Theme toggle handling
+    const htmlEl = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
 
-            // Detect preferred or stored theme
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                root.classList.add('dark');
-                root.classList.remove('light');
-            } else {
-                root.classList.add('light');
-                root.classList.remove('dark');
-            }
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedTheme = localStorage.getItem('theme');
+    const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+    htmlEl.setAttribute('data-theme', initialTheme);
 
-            toggleBtn.addEventListener('click', function() {
-                if (root.classList.contains('dark')) {
-                    root.classList.remove('dark');
-                    root.classList.add('light');
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    root.classList.remove('light');
-                    root.classList.add('dark');
-                    localStorage.setItem('theme', 'dark');
-                }
-            });
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlEl.getAttribute('data-theme');
+      const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+      htmlEl.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('theme', nextTheme);
+    });
 
-            // Share button logic
-            const shareBtn = document.getElementById('shareBtn');
-            const toast = document.getElementById('shareToast');
+    // Native Web Share API with clipboard fallback
+    const shareBtn = document.getElementById('shareBtn');
+    const toast = document.getElementById('toast');
 
-            function showToast(msg) {
-                if (msg) toast.textContent = msg;
-                toast.classList.remove('opacity-0');
-                toast.classList.add('opacity-100');
-                setTimeout(function() {
-                    toast.classList.remove('opacity-100');
-                    toast.classList.add('opacity-0');
-                }, 2800);
-            }
+    function showToast(message) {
+      if (message) toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
 
-            function fallbackCopyToClipboard() {
-                try {
-                    const tempInput = document.createElement('input');
-                    tempInput.value = window.location.href;
-                    document.body.appendChild(tempInput);
-                    tempInput.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(tempInput);
-                    showToast('लिंक कॉपी झाली आहे!');
-                } catch (e) {
-                    showToast('लिंक कॉपी करता आली नाही');
-                }
-            }
+    shareBtn.addEventListener('click', async () => {
+      const shareData = {
+        title: 'आंतरिक सौंदर्य आणि इक्वलायझर',
+        text: 'आंतरिक सौंदर्य आणि इक्वलायझर - विचारपूर्वक जीवन जगण्याचा सुंदर दृष्टिकोन.',
+        url: window.location.href
+      };
 
-            shareBtn.addEventListener('click', async function() {
-                const shareData = {
-                    title: 'आंतरिक सौंदर्य आणि इक्वलायझर',
-                    text: 'आंतरिक सौंदर्य आणि इक्वलायझर - एक सुंदर विचार',
-                    url: window.location.href
-                };
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            copyToClipboard();
+          }
+        }
+      } else {
+        copyToClipboard();
+      }
+    });
 
-                if (navigator.share) {
-                    try {
-                        await navigator.share(shareData);
-                    } catch (err) {
-                        if (err.name !== 'AbortError') {
-                            fallbackCopyToClipboard();
-                        }
-                    }
-                } else {
-                    fallbackCopyToClipboard();
-                }
-            });
-        })();
-    </script>
+    function copyToClipboard() {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(window.location.href)
+          .then(() => showToast('लिंक क्लिपबोर्डवर कॉपी केली!'))
+          .catch(() => fallbackCopy());
+      } else {
+        fallbackCopy();
+      }
+    }
+
+    function fallbackCopy() {
+      const input = document.createElement('input');
+      input.value = window.location.href;
+      document.body.appendChild(input);
+      input.select();
+      try {
+        document.execCommand('copy');
+        showToast('लिंक कॉपी केली गेली!');
+      } catch (e) {
+        showToast('लिंक कॉपी करणे शक्य झाले नाही');
+      }
+      document.body.removeChild(input);
+    }
+  </script>
 </body>
 </html>
